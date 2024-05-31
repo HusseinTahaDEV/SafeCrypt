@@ -37,7 +37,7 @@ This will open the SafeCrypt graphical user interface, where you can generate or
 
 ## Documentation
 
-For detailed documentation and usage instructions, please refer to the [Wiki](https://github.com/HusseinTahaDEV/SafeCrypt/wiki).
+For detailed documentation and usage instructions, please refer to the [Wiki](https://github.com/HusseinTahaDEV/SafeCrypt/tree/main/wiki).
 
 ## Development
 
