@@ -1,6 +1,3 @@
-Certainly! Here's a polished README.md file for your SafeCrypt project:
-
-```markdown
 # SafeCrypt
 
 SafeCrypt is a professional-grade file encryption and decryption tool designed to provide maximum security and ease of use. With SafeCrypt, you can securely encrypt your sensitive files using strong encryption algorithms and manage your encryption keys with confidence.
