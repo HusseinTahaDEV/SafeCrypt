@@ -1,6 +1,3 @@
-Sure, here is the updated `README.md` file for SafeCrypt incorporating the requested elements:
-
-```markdown
 # SafeCrypt
 ![SafeCrypt Logo](https://github.com/HusseinTahaDEV/SafeCrypt/assets/logo.png)
 SafeCrypt is a professional-grade file encryption and decryption tool designed to provide maximum security and ease of use. With SafeCrypt, you can securely encrypt your sensitive files using strong encryption algorithms and manage your encryption keys with confidence.
