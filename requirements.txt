@@ -1,0 +1,5 @@
+cryptography
+colorama
+pyfiglet
+request
+PyQt5
