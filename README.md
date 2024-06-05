@@ -101,6 +101,3 @@ For any inquiries or support, please contact [Hussein Taha](mailto:ceo.husseinta
 
 - Created by Hussein Taha
 - GitHub: [HusseinTahaDEV](https://github.com/HusseinTahaDEV)
-```
-
-This `README.md` includes all the main parts and follows a professional format. It provides a clear overview of the project, installation instructions, usage examples, updating instructions, and contribution guidelines, making it easy for others to use and contribute to the project.
