@@ -19,6 +19,7 @@ SafeCrypt is a professional-grade file encryption and decryption tool designed t
 ## Installation
 
 To install SafeCrypt : 
+
 to install git if not installed: 
 
 ```bash
