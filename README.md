@@ -18,15 +18,30 @@ SafeCrypt is a professional-grade file encryption and decryption tool designed t
 
 ## Installation
 
-To install SafeCrypt, clone the repository:
+To install SafeCrypt : 
+to install git if not installed: 
+
+```bash
+pip install git
+```
+clone the repository:
 
 ```bash
 git clone https://github.com/HusseinTahaDEV/SafeCrypt.git
 cd SafeCrypt
 ```
+to install the requirements :
 
+```bash
+pip install -r requirements.txt
+```
 ## Usage
+to start the tool :
 
+```bash
+python SafeCrypt.py
+```
+then choose between options this is up to you
 ### Terminal Version
 
 1. **Generate Key**:
