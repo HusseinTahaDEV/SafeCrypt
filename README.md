@@ -1,5 +1,6 @@
 # SafeCrypt
 ![SafeCrypt Logo](https://raw.githubusercontent.com/HusseinTahaDEV/SafeCrypt/main/assets/logo.PNG).
+
 SafeCrypt is a professional-grade file encryption and decryption tool designed to provide maximum security and ease of use. With SafeCrypt, you can securely encrypt your sensitive files using strong encryption algorithms and manage your encryption keys with confidence.
 
 [![License](https://img.shields.io/badge/license-MIT-blue.svg)](https://github.com/HusseinTahaDEV/SafeCrypt/blob/main/LICENSE)
