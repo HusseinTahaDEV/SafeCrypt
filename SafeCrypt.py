@@ -1,17 +1,17 @@
 import sys
 import os
+import shutil
 import subprocess
 import colorama
 from colorama import Fore, Style
 import pyfiglet
 import requests
-import shutil
 
 colorama.init(autoreset=True)
 
 REPO_URL = "https://github.com/HusseinTahaDEV/SafeCrypt.git"
-TARGET_DIR = os.path.abspath(os.path.dirname(__file__))  # Current directory where script is located
-VERSION_FILE = "version.txt"
+TARGET_DIR = "F:\\SafeCrypt"  # Update this with your target directory
+VERSION_FILE = os.path.join(TARGET_DIR, "version.txt")
 
 
 def welcome_message():
@@ -53,33 +53,46 @@ def fetch_latest_version():
 
 
 def read_local_version():
-    version_file = os.path.join(TARGET_DIR, VERSION_FILE)
-    if os.path.exists(version_file):
-        with open(version_file, "r") as file:
+    if os.path.exists(VERSION_FILE):
+        with open(VERSION_FILE, "r") as file:
             return file.read().strip()
-    else:
-        print(Fore.RED + f"Cannot find {version_file}")
+    return None
 
 
 def clear_directory(directory):
     try:
         for filename in os.listdir(directory):
             file_path = os.path.join(directory, filename)
-            if os.path.isfile(file_path) or os.path.islink(file_path):
-                os.unlink(file_path)
-            elif os.path.isdir(file_path):
-                shutil.rmtree(file_path)
+            try:
+                if os.path.isfile(file_path) or os.path.islink(file_path):
+                    os.unlink(file_path)
+                elif os.path.isdir(file_path):
+                    shutil.rmtree(file_path, onerror=remove_readonly)
+            except Exception as e:
+                print(Fore.RED + f"Failed to delete {file_path}. Reason: {e}")
+                return False
     except Exception as e:
         print(Fore.RED + f"Failed to clear directory {directory}: {e}")
+        return False
+    return True
+
+
+def remove_readonly(func, path, exc_info):
+    os.chmod(path, 0o777)
+    func(path)
 
 
 def update_safe_crypt():
     try:
         print(Fore.GREEN + f"Updating SafeCrypt in {TARGET_DIR}...")
-        clear_directory(TARGET_DIR)
+        if not clear_directory(TARGET_DIR):
+            print(Fore.RED + f"Failed to clear directory {TARGET_DIR}.")
+            return False
         subprocess.run(["git", "clone", REPO_URL, TARGET_DIR], check=True)
     except subprocess.CalledProcessError as e:
         print(Fore.RED + f"Failed to update SafeCrypt: {e}")
+        return False
+    return True
 
 
 def check_updates():
@@ -96,7 +109,8 @@ def check_updates():
                     .lower()
                 )
                 if update_choice == "yes":
-                    update_safe_crypt()
+                    if not update_safe_crypt():
+                        print(Fore.RED + "Failed to update SafeCrypt.")
                 else:
                     print(
                         Fore.GREEN
