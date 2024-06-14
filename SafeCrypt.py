@@ -11,7 +11,6 @@ colorama.init(autoreset=True)
 
 REPO_URL = "https://github.com/HusseinTahaDEV/SafeCrypt.git"
 TARGET_DIR = "SafeCrypt"
-LOCAL_VERSION_FILE = os.path.join(TARGET_DIR, "version.txt")
 
 def welcome_message():
     print(Fore.CYAN + pyfiglet.figlet_format("SafeCrypt"))
@@ -48,12 +47,6 @@ def fetch_latest_version():
             Fore.RED + f"An error occurred while fetching version information: {str(e)}"
         )
 
-def read_local_version():
-    if os.path.exists(LOCAL_VERSION_FILE):
-        with open(LOCAL_VERSION_FILE, "r") as file:
-            return file.read().strip()
-    return None
-
 def clear_folder(folder_path):
     if os.path.exists(folder_path):
         for filename in os.listdir(folder_path):
@@ -78,10 +71,7 @@ def check_updates():
         print(Fore.GREEN + "Checking for updates...")
         latest_version = fetch_latest_version()
         if latest_version:
-            current_version = read_local_version()
-            if not current_version:
-                print(Fore.RED + "Current version not found. Assuming update is needed.")
-                current_version = "0.0"
+            current_version = "3.0"  # Replace with the actual current version
             if current_version != latest_version:
                 print(Fore.YELLOW + f"New version {latest_version} is available.")
                 update_choice = (
