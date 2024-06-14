@@ -5,6 +5,7 @@ import colorama
 from colorama import Fore, Style
 import pyfiglet
 import requests
+import shutil
 
 colorama.init(autoreset=True)
 
@@ -60,27 +61,25 @@ def read_local_version():
         print(Fore.RED + f"Cannot find {version_file}")
 
 
+def clear_directory(directory):
+    try:
+        for filename in os.listdir(directory):
+            file_path = os.path.join(directory, filename)
+            if os.path.isfile(file_path) or os.path.islink(file_path):
+                os.unlink(file_path)
+            elif os.path.isdir(file_path):
+                shutil.rmtree(file_path)
+    except Exception as e:
+        print(Fore.RED + f"Failed to clear directory {directory}: {e}")
+
+
 def update_safe_crypt():
     try:
         print(Fore.GREEN + f"Updating SafeCrypt in {TARGET_DIR}...")
-        if os.path.exists(TARGET_DIR):
-            subprocess.run(["git", "stash"], cwd=TARGET_DIR, check=True)  # Stash local changes
-            subprocess.run(["git", "pull"], cwd=TARGET_DIR, check=True)
-            subprocess.run(["git", "stash", "pop"], cwd=TARGET_DIR, check=True)  # Pop stashed changes back
-        else:
-            subprocess.run(["git", "clone", REPO_URL, TARGET_DIR], check=True)
+        clear_directory(TARGET_DIR)
+        subprocess.run(["git", "clone", REPO_URL, TARGET_DIR], check=True)
     except subprocess.CalledProcessError as e:
-        if "CONFLICT" in str(e):
-            print(Fore.RED + "Merge conflict detected. Attempting to resolve...")
-            try:
-                subprocess.run(["git", "checkout", "--theirs", "SafeCrypt.py"], cwd=TARGET_DIR, check=True)
-                subprocess.run(["git", "add", "SafeCrypt.py"], cwd=TARGET_DIR, check=True)
-                subprocess.run(["git", "stash", "pop"], cwd=TARGET_DIR, check=True)
-                print(Fore.GREEN + "Merge conflict resolved. Update successful.")
-            except subprocess.CalledProcessError as e:
-                print(Fore.RED + f"Failed to resolve merge conflict: {e}")
-        else:
-            print(Fore.RED + f"Failed to update SafeCrypt: {e}")
+        print(Fore.RED + f"Failed to update SafeCrypt: {e}")
 
 
 def check_updates():
