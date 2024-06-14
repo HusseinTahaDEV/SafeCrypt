@@ -24,13 +24,11 @@ def welcome_message():
     print(Fore.YELLOW + "3. Check for updates")
     print(Fore.RED + "4. Exit\n")
 
-
 def clear_screen():
     if os.name == "posix":  # Linux/Unix/MacOS
         _ = subprocess.call("clear", shell=True)
     elif os.name == "nt":  # Windows
         _ = subprocess.call("cls", shell=True)
-
 
 def fetch_latest_version():
     try:
@@ -49,7 +47,6 @@ def fetch_latest_version():
             Fore.RED + f"An error occurred while fetching version information: {str(e)}"
         )
 
-
 def clear_folder(folder_path):
     if os.path.exists(folder_path):
         for filename in os.listdir(folder_path):
@@ -58,10 +55,16 @@ def clear_folder(folder_path):
                 if os.path.isfile(file_path) or os.path.islink(file_path):
                     os.unlink(file_path)
                 elif os.path.isdir(file_path):
-                    shutil.rmtree(file_path)
+                    shutil.rmtree(file_path, onerror=remove_readonly)
             except Exception as e:
                 print(Fore.RED + f"Failed to delete {file_path}. Reason: {e}")
 
+def remove_readonly(func, path, exc_info):
+    try:
+        os.chmod(path, 0o777)
+        func(path)
+    except Exception as e:
+        print(Fore.RED + f"Failed to change permissions for {path}. Reason: {e}")
 
 def check_updates():
     try:
@@ -79,6 +82,8 @@ def check_updates():
                 if update_choice == "yes":
                     print(Fore.GREEN + "Updating SafeCrypt...")
                     clear_folder(TARGET_DIR)
+                    if os.path.exists(TARGET_DIR):
+                        shutil.rmtree(TARGET_DIR, onerror=remove_readonly)
                     subprocess.run(["git", "clone", REPO_URL])
                     print(Fore.GREEN + "SafeCrypt has been updated successfully!")
                 else:
@@ -92,7 +97,6 @@ def check_updates():
         print(Fore.RED + "\nUpdate process interrupted.")
     input(Fore.YELLOW + "Press Enter to continue...")
 
-
 def main():
     try:
         clear_screen()
@@ -101,10 +105,10 @@ def main():
 
         if choice == "1":
             print(Fore.GREEN + "Launching GUI version...")
-            subprocess.run(["python", "/scripts/GUI.py"])
+            subprocess.run(["python", "scripts/GUI.py"])
         elif choice == "2":
             print(Fore.GREEN + "Launching Terminal version...")
-            subprocess.run(["python", "/scripts/safecrypter.py"])
+            subprocess.run(["python", "scripts/safecrypter.py"])
         elif choice == "3":
             check_updates()
         elif choice == "4":
@@ -116,7 +120,6 @@ def main():
     except KeyboardInterrupt:
         print(Fore.RED + "\nProgram interrupted by user.")
         sys.exit(1)
-
 
 if __name__ == "__main__":
     main()
