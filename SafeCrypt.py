@@ -1,6 +1,5 @@
 import sys
 import os
-import shutil
 import subprocess
 import colorama
 from colorama import Fore, Style
@@ -10,7 +9,7 @@ import requests
 colorama.init(autoreset=True)
 
 REPO_URL = "https://github.com/HusseinTahaDEV/SafeCrypt.git"
-TARGET_DIR = os.path.abspath(os.path.dirname(__file__))  # Set the target directory to current working directory
+TARGET_DIR = os.path.abspath(os.path.dirname(__file__))  # Current directory where script is located
 VERSION_FILE = "version.txt"
 
 
@@ -65,11 +64,23 @@ def update_safe_crypt():
     try:
         print(Fore.GREEN + f"Updating SafeCrypt in {TARGET_DIR}...")
         if os.path.exists(TARGET_DIR):
+            subprocess.run(["git", "stash"], cwd=TARGET_DIR, check=True)  # Stash local changes
             subprocess.run(["git", "pull"], cwd=TARGET_DIR, check=True)
+            subprocess.run(["git", "stash", "pop"], cwd=TARGET_DIR, check=True)  # Pop stashed changes back
         else:
             subprocess.run(["git", "clone", REPO_URL, TARGET_DIR], check=True)
-    except Exception as e:
-        print(Fore.RED + f"Failed to update SafeCrypt: {str(e)}")
+    except subprocess.CalledProcessError as e:
+        if "CONFLICT" in str(e):
+            print(Fore.RED + "Merge conflict detected. Attempting to resolve...")
+            try:
+                subprocess.run(["git", "checkout", "--theirs", "SafeCrypt.py"], cwd=TARGET_DIR, check=True)
+                subprocess.run(["git", "add", "SafeCrypt.py"], cwd=TARGET_DIR, check=True)
+                subprocess.run(["git", "stash", "pop"], cwd=TARGET_DIR, check=True)
+                print(Fore.GREEN + "Merge conflict resolved. Update successful.")
+            except subprocess.CalledProcessError as e:
+                print(Fore.RED + f"Failed to resolve merge conflict: {e}")
+        else:
+            print(Fore.RED + f"Failed to update SafeCrypt: {e}")
 
 
 def check_updates():
