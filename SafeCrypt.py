@@ -53,7 +53,7 @@ def check_updates():
         print(Fore.GREEN + "Checking for updates...")
         latest_version = fetch_latest_version()
         if latest_version:
-            current_version = "2.0"  # Replace with the actual current version
+            current_version = "3.0"  # Replace with the actual current version
             if current_version != latest_version:
                 print(Fore.YELLOW + f"New version {latest_version} is available.")
                 update_choice = (
