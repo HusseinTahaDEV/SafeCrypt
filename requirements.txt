@@ -1,5 +1,5 @@
 cryptography
 colorama
 pyfiglet
-request
+requests
 PyQt5
