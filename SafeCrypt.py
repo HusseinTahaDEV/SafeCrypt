@@ -11,6 +11,8 @@ colorama.init(autoreset=True)
 
 REPO_URL = "https://github.com/HusseinTahaDEV/SafeCrypt.git"
 TARGET_DIR = "SafeCrypt"
+LOCAL_VERSION_FILE = os.path.join(TARGET_DIR, "version.txt")
+
 
 def welcome_message():
     print(Fore.CYAN + pyfiglet.figlet_format("SafeCrypt"))
@@ -24,11 +26,13 @@ def welcome_message():
     print(Fore.YELLOW + "3. Check for updates")
     print(Fore.RED + "4. Exit\n")
 
+
 def clear_screen():
     if os.name == "posix":  # Linux/Unix/MacOS
         _ = subprocess.call("clear", shell=True)
     elif os.name == "nt":  # Windows
         _ = subprocess.call("cls", shell=True)
+
 
 def fetch_latest_version():
     try:
@@ -47,6 +51,16 @@ def fetch_latest_version():
             Fore.RED + f"An error occurred while fetching version information: {str(e)}"
         )
 
+
+def read_local_version():
+    if os.path.exists(LOCAL_VERSION_FILE):
+        with open(LOCAL_VERSION_FILE, "r") as file:
+            return file.read().strip()
+    else:
+        print(Fore.RED + f"Cannot find {LOCAL_VERSION_FILE}. Current directory: {os.getcwd()}")
+    return None
+
+
 def clear_folder(folder_path):
     if os.path.exists(folder_path):
         for filename in os.listdir(folder_path):
@@ -59,6 +73,7 @@ def clear_folder(folder_path):
             except Exception as e:
                 print(Fore.RED + f"Failed to delete {file_path}. Reason: {e}")
 
+
 def remove_readonly(func, path, exc_info):
     try:
         os.chmod(path, 0o777)
@@ -66,12 +81,31 @@ def remove_readonly(func, path, exc_info):
     except Exception as e:
         print(Fore.RED + f"Failed to change permissions for {path}. Reason: {e}")
 
+
+def update_safe_crypt():
+    try:
+        print(Fore.GREEN + "Updating SafeCrypt...")
+        clear_folder(TARGET_DIR)
+        subprocess.run(
+            ["git", "clone", "--depth", "1", REPO_URL, TARGET_DIR],
+            check=True,
+        )
+        print(Fore.GREEN + "SafeCrypt has been updated successfully!")
+    except Exception as e:
+        print(Fore.RED + f"Failed to update SafeCrypt: {str(e)}")
+
+
 def check_updates():
     try:
         print(Fore.GREEN + "Checking for updates...")
         latest_version = fetch_latest_version()
         if latest_version:
-            current_version = "3.0"  # Replace with the actual current version
+            current_version = read_local_version()
+            if not current_version:
+                print(
+                    Fore.RED + "Current version not found. Assuming update is needed."
+                )
+                current_version = "0.0"
             if current_version != latest_version:
                 print(Fore.YELLOW + f"New version {latest_version} is available.")
                 update_choice = (
@@ -80,10 +114,7 @@ def check_updates():
                     .lower()
                 )
                 if update_choice == "yes":
-                    print(Fore.GREEN + "Updating SafeCrypt...")
-                    clear_folder(TARGET_DIR)
-                    subprocess.run(["git", "clone", "--depth", "1", REPO_URL, TARGET_DIR], check=True)
-                    print(Fore.GREEN + "SafeCrypt has been updated successfully!")
+                    update_safe_crypt()
                 else:
                     print(
                         Fore.GREEN
@@ -94,6 +125,7 @@ def check_updates():
     except KeyboardInterrupt:
         print(Fore.RED + "\nUpdate process interrupted.")
     input(Fore.YELLOW + "Press Enter to continue...")
+
 
 def main():
     try:
@@ -118,6 +150,7 @@ def main():
     except KeyboardInterrupt:
         print(Fore.RED + "\nProgram interrupted by user.")
         sys.exit(1)
+
 
 if __name__ == "__main__":
     main()
