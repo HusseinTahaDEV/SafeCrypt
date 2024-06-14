@@ -132,10 +132,10 @@ def main():
 
         if choice == "1":
             print(Fore.GREEN + "Launching GUI version...")
-            subprocess.run(["python", "SafeCrypt/GUI.py"])
+            subprocess.run(["python", "Scripts/GUI.py"])
         elif choice == "2":
             print(Fore.GREEN + "Launching Terminal version...")
-            subprocess.run(["python", "SafeCrypt/safecrypt.py"])
+            subprocess.run(["python", "Scripts/safecrypter.py"])
         elif choice == "3":
             check_updates()
         elif choice == "4":

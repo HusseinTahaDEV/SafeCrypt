@@ -16,9 +16,11 @@ def welcome_message():
     print(Fore.CYAN + "Welcome to SafeCrypt - Simple File Encryption\n")
     print(Fore.GREEN + "Secure your files with ease using SafeCrypt.")
     print(Fore.GREEN + "Choose an option to continue:\n")
-    print(Fore.YELLOW + "1. Encrypt a file")
-    print(Fore.YELLOW + "2. Decrypt a file")
-    print(Fore.RED + "3. Exit\n")
+    print(Fore.RED + "((WARNING))")
+    print(Fore.YELLOW + "")
+    print(Fore.YELLOW + "this CLI version is experimental")
+    print(Fore.YELLOW + "some features may not work as expected ")
+    print(Fore.YELLOW + "")
 
 
 def clear_screen():
@@ -82,6 +84,7 @@ def decrypt_file(args, manager):
 
 def main():
     clear_screen()
+
     welcome_message()
 
     parser = argparse.ArgumentParser(
