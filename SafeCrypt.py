@@ -1,14 +1,13 @@
 import sys
 import os
+import shutil
 import subprocess
 import colorama
 from colorama import Fore, Style
 import pyfiglet
-import webbrowser
 import requests
 
 colorama.init(autoreset=True)
-
 
 def welcome_message():
     print(Fore.CYAN + pyfiglet.figlet_format("SafeCrypt"))
@@ -48,6 +47,19 @@ def fetch_latest_version():
         )
 
 
+def clear_folder(folder_path):
+    if os.path.exists(folder_path):
+        for filename in os.listdir(folder_path):
+            file_path = os.path.join(folder_path, filename)
+            try:
+                if os.path.isfile(file_path) or os.path.islink(file_path):
+                    os.unlink(file_path)
+                elif os.path.isdir(file_path):
+                    shutil.rmtree(file_path)
+            except Exception as e:
+                print(Fore.RED + f"Failed to delete {file_path}. Reason: {e}")
+
+
 def check_updates():
     try:
         print(Fore.GREEN + "Checking for updates...")
@@ -63,13 +75,8 @@ def check_updates():
                 )
                 if update_choice == "yes":
                     print(Fore.GREEN + "Updating SafeCrypt...")
-                    subprocess.run(
-                        [
-                            "git",
-                            "clone",
-                            "https://github.com/HusseinTahaDEV/SafeCrypt.git",
-                        ]
-                    )
+                    clear_folder(TARGET_DIR)
+                    subprocess.run(["git", "clone", REPO_URL])
                     print(Fore.GREEN + "SafeCrypt has been updated successfully!")
                 else:
                     print(
