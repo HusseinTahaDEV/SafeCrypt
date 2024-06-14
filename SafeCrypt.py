@@ -82,9 +82,7 @@ def check_updates():
                 if update_choice == "yes":
                     print(Fore.GREEN + "Updating SafeCrypt...")
                     clear_folder(TARGET_DIR)
-                    if os.path.exists(TARGET_DIR):
-                        shutil.rmtree(TARGET_DIR, onerror=remove_readonly)
-                    subprocess.run(["git", "clone", REPO_URL])
+                    subprocess.run(["git", "clone", "--depth", "1", REPO_URL, TARGET_DIR], check=True)
                     print(Fore.GREEN + "SafeCrypt has been updated successfully!")
                 else:
                     print(
