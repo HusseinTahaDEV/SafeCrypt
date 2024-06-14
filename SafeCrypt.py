@@ -10,8 +10,8 @@ import requests
 colorama.init(autoreset=True)
 
 REPO_URL = "https://github.com/HusseinTahaDEV/SafeCrypt.git"
-TARGET_DIR = "SafeCrypt"
-LOCAL_VERSION_FILE = os.path.join(TARGET_DIR, "version.txt")
+TARGET_DIR = os.path.abspath(os.path.dirname(__file__))  # Set the target directory to current working directory
+VERSION_FILE = "version.txt"
 
 
 def welcome_message():
@@ -40,7 +40,7 @@ def fetch_latest_version():
             "https://raw.githubusercontent.com/HusseinTahaDEV/SafeCrypt/main/version.txt"
         )
         if response.status_code == 200:
-            return response.text.strip()  # Remove leading/trailing whitespace
+            return response.text.strip()
         else:
             print(
                 Fore.RED
@@ -53,44 +53,21 @@ def fetch_latest_version():
 
 
 def read_local_version():
-    if os.path.exists(LOCAL_VERSION_FILE):
-        with open(LOCAL_VERSION_FILE, "r") as file:
+    version_file = os.path.join(TARGET_DIR, VERSION_FILE)
+    if os.path.exists(version_file):
+        with open(version_file, "r") as file:
             return file.read().strip()
     else:
-        print(Fore.RED + f"Cannot find {LOCAL_VERSION_FILE}. Current directory: {os.getcwd()}")
-    return None
-
-
-def clear_folder(folder_path):
-    if os.path.exists(folder_path):
-        for filename in os.listdir(folder_path):
-            file_path = os.path.join(folder_path, filename)
-            try:
-                if os.path.isfile(file_path) or os.path.islink(file_path):
-                    os.unlink(file_path)
-                elif os.path.isdir(file_path):
-                    shutil.rmtree(file_path, onerror=remove_readonly)
-            except Exception as e:
-                print(Fore.RED + f"Failed to delete {file_path}. Reason: {e}")
-
-
-def remove_readonly(func, path, exc_info):
-    try:
-        os.chmod(path, 0o777)
-        func(path)
-    except Exception as e:
-        print(Fore.RED + f"Failed to change permissions for {path}. Reason: {e}")
+        print(Fore.RED + f"Cannot find {version_file}")
 
 
 def update_safe_crypt():
     try:
-        print(Fore.GREEN + "Updating SafeCrypt...")
-        clear_folder(TARGET_DIR)
-        subprocess.run(
-            ["git", "clone", "--depth", "1", REPO_URL, TARGET_DIR],
-            check=True,
-        )
-        print(Fore.GREEN + "SafeCrypt has been updated successfully!")
+        print(Fore.GREEN + f"Updating SafeCrypt in {TARGET_DIR}...")
+        if os.path.exists(TARGET_DIR):
+            subprocess.run(["git", "pull"], cwd=TARGET_DIR, check=True)
+        else:
+            subprocess.run(["git", "clone", REPO_URL, TARGET_DIR], check=True)
     except Exception as e:
         print(Fore.RED + f"Failed to update SafeCrypt: {str(e)}")
 
@@ -101,12 +78,7 @@ def check_updates():
         latest_version = fetch_latest_version()
         if latest_version:
             current_version = read_local_version()
-            if not current_version:
-                print(
-                    Fore.RED + "Current version not found. Assuming update is needed."
-                )
-                current_version = "0.0"
-            if current_version != latest_version:
+            if not current_version or current_version != latest_version:
                 print(Fore.YELLOW + f"New version {latest_version} is available.")
                 update_choice = (
                     input(Fore.YELLOW + "Do you want to update? (yes/no): ")
@@ -135,10 +107,10 @@ def main():
 
         if choice == "1":
             print(Fore.GREEN + "Launching GUI version...")
-            subprocess.run(["python", "scripts/GUI.py"])
+            subprocess.run(["python", "SafeCrypt/GUI.py"])
         elif choice == "2":
             print(Fore.GREEN + "Launching Terminal version...")
-            subprocess.run(["python", "scripts/safecrypter.py"])
+            subprocess.run(["python", "SafeCrypt/safecrypt.py"])
         elif choice == "3":
             check_updates()
         elif choice == "4":
