@@ -9,6 +9,9 @@ import requests
 
 colorama.init(autoreset=True)
 
+REPO_URL = "https://github.com/HusseinTahaDEV/SafeCrypt.git"
+TARGET_DIR = "SafeCrypt"
+
 def welcome_message():
     print(Fore.CYAN + pyfiglet.figlet_format("SafeCrypt"))
     print(Fore.CYAN + "Welcome to SafeCrypt - Simple File Encryption\n")
