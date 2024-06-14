@@ -53,7 +53,7 @@ def check_updates():
         print(Fore.GREEN + "Checking for updates...")
         latest_version = fetch_latest_version()
         if latest_version:
-            current_version = "1.0"  # Replace with the actual current version
+            current_version = "2.0"  # Replace with the actual current version
             if current_version != latest_version:
                 print(Fore.YELLOW + f"New version {latest_version} is available.")
                 update_choice = (
@@ -91,10 +91,10 @@ def main():
 
         if choice == "1":
             print(Fore.GREEN + "Launching GUI version...")
-            subprocess.run(["python", "main.py"])
+            subprocess.run(["python", "/scripts/GUI.py"])
         elif choice == "2":
             print(Fore.GREEN + "Launching Terminal version...")
-            subprocess.run(["python", "safecrypter.py"])
+            subprocess.run(["python", "/scripts/safecrypter.py"])
         elif choice == "3":
             check_updates()
         elif choice == "4":
