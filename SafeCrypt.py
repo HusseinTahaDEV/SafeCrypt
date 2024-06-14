@@ -8,9 +8,10 @@ import pyfiglet
 import requests
 
 colorama.init(autoreset=True)
-
 REPO_URL = "https://github.com/HusseinTahaDEV/SafeCrypt.git"
-TARGET_DIR = "F:\\SafeCrypt"  # Update this with your target directory
+# Determine the current working directory where the script is located
+CURRENT_DIR = os.path.dirname(os.path.abspath(__file__))
+TARGET_DIR = CURRENT_DIR  # Set the target directory to the current working directory
 VERSION_FILE = os.path.join(TARGET_DIR, "version.txt")
 
 
